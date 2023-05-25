@@ -30,7 +30,7 @@ ticks
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+Project SeperAgent - An agent-based simulation to explore the characteristics of molecular separation in affinity chromatography using NetLogo.
 
 ## HOW IT WORKS
 
