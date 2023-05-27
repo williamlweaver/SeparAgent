@@ -30,7 +30,7 @@ ticks
 @#$#@#$#@
 ## WHAT IS IT?
 
-Project SeperAgent - An agent-based simulation to explore the characteristics of molecular separation in affinity chromatography using NetLogo.
+Project SeparAgent - An agent-based simulation to explore the characteristics of molecular separation in affinity chromatography using NetLogo.
 
 ## HOW IT WORKS
 
