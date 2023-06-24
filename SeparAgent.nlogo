@@ -1,10 +1,101 @@
+globals [ mobile_phase component ]
+breed [ compA theA ]
+breed [ compB theB ]
+breed [ compC theC ]
+breed [ compD theD ]
+compA-own [ affinity ]
+compB-own [ affinity ]
+compC-own [ affinity ]
+compD-own [ affinity ]
 
+
+
+to setup
+  clear-all
+  set mobile_phase 0
+  set component 1
+  repeat num_components [
+    if component = 1 [
+        create-compA num_molecules [
+        set shape "circle"
+        set color sky
+        setxy 0 component - 1
+        set affinity CompA_Affinity
+      ]
+    ]
+    if component = 2 [
+        create-compB num_molecules [
+        set shape "circle"
+        set color lime
+        setxy 0 component - 1
+        set affinity CompB_Affinity
+      ]
+    ]
+    if component = 3 [
+        create-compC num_molecules [
+        set shape "circle"
+        set color yellow
+        setxy 0 component - 1
+        set affinity CompC_Affinity
+      ]
+    ]
+    if component = 4 [
+        create-compD num_molecules [
+        set shape "circle"
+        set color Red
+        setxy 0 component - 1
+        set affinity CompD_Affinity
+      ]
+    ]
+    set component component + 1
+  ]
+
+  reset-ticks
+end
+
+to go
+  if mobile_phase <= max-pxcor [ ask patches with [ pxcor = mobile_phase ] [ set pcolor blue ] ]; change pcolor to blue along x-axis of world to indicate position of mobile phase.
+  set component 1
+  repeat num_components [
+    if component = 1 [
+      ask compA [if random-float 1 <= affinity [ set xcor xcor + 1 ] if xcor = max-pxcor [ set xcor max-pxcor - 1 ]
+      ]
+    ]
+    if component = 2 [
+        ask compB [if random-float 1 <= affinity [ set xcor xcor + 1 ] if xcor = max-pxcor [ set xcor max-pxcor - 1]
+      ]
+    ]
+    if component = 3 [
+        ask compC [if random-float 1 <= affinity [ set xcor xcor + 1 ] if xcor = max-pxcor [ set xcor max-pxcor - 1]
+      ]
+    ]
+    if component = 4 [
+        ask compD [if random-float 1 <= affinity [ set xcor xcor + 1 ] if xcor = max-pxcor [ set xcor max-pxcor - 1]
+      ]
+    ]
+    set component component + 1
+  ]
+
+
+  set mobile_phase mobile_phase + 1
+ tick
+end
+
+to elute
+
+
+end
+
+
+;; random-float
+
+;; ask compA [if random-float <= affinity [ set xcor xcor + 1 ] ]
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
-647
-448
+1063
+71
 -1
 -1
 13.0
@@ -14,18 +105,152 @@ GRAPHICS-WINDOW
 1
 1
 0
+0
+0
 1
-1
-1
--16
-16
--16
-16
+0
+64
+0
+3
 0
 0
 1
 ticks
 30.0
+
+BUTTON
+11
+10
+84
+43
+NIL
+setup
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+92
+10
+166
+43
+NIL
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+TEXTBOX
+197
+14
+214
+74
+D\nC\nB\nA
+10
+0.0
+1
+
+SLIDER
+11
+91
+183
+124
+num_components
+num_components
+1
+4
+4.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+11
+129
+183
+162
+num_molecules
+num_molecules
+1
+50
+10.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+211
+90
+383
+123
+CompA_Affinity
+CompA_Affinity
+0
+1
+1.0
+.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+211
+130
+383
+163
+CompB_Affinity
+CompB_Affinity
+0
+1
+0.8
+.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+211
+168
+383
+201
+CompC_Affinity
+CompC_Affinity
+0
+1
+0.6
+.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+211
+206
+383
+239
+CompD_Affinity
+CompD_Affinity
+0
+1
+0.4
+.05
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -34,7 +259,9 @@ Project SeparAgent - An agent-based simulation to explore the characteristics of
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+In this version, the chromatographic column is visualized as a world that is 64 patches wide and 4 patches tall. Each patch along the x-axis is a position along the length of the column and each row of patches along the y-axis is a channel or lane for an individual component to flow.
+
+Initially black, the flow of the Mobile phase is visualized by changing each patch to blue along the column as the Mobile phase flows through it.
 
 ## HOW TO USE IT
 
