@@ -1,4 +1,4 @@
-globals [ mobile_phase component ]
+globals [ mobile_phase component detector stop_flag]
 breed [ compA theA ]
 breed [ compB theB ]
 breed [ compC theC ]
@@ -13,6 +13,8 @@ compD-own [ affinity ]
 to setup
   clear-all
   set mobile_phase 0
+  set detector 0
+  set stop_flag 0
   set component 1
   repeat num_components [
     if component = 1 [
@@ -54,17 +56,21 @@ to setup
 end
 
 to go
-
+  set detector 0
   if mobile_phase <= max-pxcor [ ask patches with [ pxcor = mobile_phase ] [ set pcolor blue ] ]; change pcolor to blue along x-axis of world to indicate position of mobile phase.
 
   set component 1
   repeat num_components [
     if component = 1 [
       ask compA [if random-float 1 <= affinity [if xcor < max-pxcor - 1 [ set xcor xcor + 1 ] ]
+        ask compA [if xcor = max-pxcor - 1 [ set detector detector + 1 ] ]
+          ask compA [if xcor = max-pxcor - 1 [ die ] ]
       ]
     ]
     if component = 2 [
         ask compB [if random-float 1 <= affinity [if xcor < max-pxcor - 1 [ set xcor xcor + 1 ] ]
+          ask compB [if xcor = max-pxcor - 1 [ set detector detector + 1 ] ]
+            ask compB [if xcor = max-pxcor - 1 [ die ] ]
       ]
     ]
     if component = 3 [
@@ -77,9 +83,10 @@ to go
     ]
     set component component + 1
   ]
-  set mobile_phase mobile_phase + 1
 
- tick
+  set mobile_phase mobile_phase + 1
+  tick
+  if not any? compA AND not any? compB AND not any? compC AND not any? compD [ stop ]
 end
 
 to elute
@@ -93,13 +100,13 @@ end
 ;; ask compA [if random-float <= affinity [ set xcor xcor + 1 ] ]
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-1063
-71
+214
+14
+1512
+63
 -1
 -1
-13.0
+10.0
 1
 10
 1
@@ -110,7 +117,7 @@ GRAPHICS-WINDOW
 0
 1
 0
-64
+128
 0
 3
 0
@@ -172,7 +179,7 @@ num_components
 num_components
 1
 4
-4.0
+2.0
 1
 1
 NIL
@@ -186,8 +193,8 @@ SLIDER
 num_molecules
 num_molecules
 1
-50
-50.0
+256
+256.0
 1
 1
 NIL
@@ -202,7 +209,7 @@ CompA_Affinity
 CompA_Affinity
 0
 1
-0.1
+0.8
 .05
 1
 NIL
@@ -324,6 +331,24 @@ false
 "" "set-plot-x-range -20 20\nset-plot-y-range 0 count compD\nset-histogram-num-bars 21"
 PENS
 "default" 1.0 1 -2674135 true "" "histogram [xcor - mean [xcor] of compD] of compD"
+
+PLOT
+632
+91
+1547
+239
+Detector
+NIL
+NIL
+0.0
+64.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 1 -16777216 true "" "plot detector"
 
 @#$#@#$#@
 ## WHAT IS IT?
